@@ -3,8 +3,10 @@ const COMISION_PORCENTAJE = 0.01;
 
 // Cargar saldo desde localStorage
 $(document).ready(function() {
-  console.log("Pantalla de transferencia cargada");
-  
+  let loggedUser = JSON.parse(sessionStorage.getItem("loggedUser"));
+  $("#saldoDisponible").text("$" + loggedUser.saldo);
+  $("#maxMonto").text("Monto máximo a Transferir $" + loggedUser.saldo);
+  cargarContactosSelect();
   // Evento para abrir modal de agregar contacto
   $("#btnAgregarContacto").click(function() {
     const modal = new bootstrap.Modal(document.getElementById("modalNuevoContacto"));
@@ -13,7 +15,36 @@ $(document).ready(function() {
 
   // Evento para guardar nuevo contacto
   $("#btnGuardarContacto").click(function() {
-    guardarNuevoContacto();
+    contacto =guardarNuevoContacto();
+    cargarContactosSelect();
+    $("#selectContacto").val(contacto.cuenta);
+    cargarCuentaSeleccionada(contacto.cuenta);
+  });
+
+  function cargarCuentaSeleccionada(cuentaSeleccionada) {
+    if (!cuentaSeleccionada) {
+      // Limpiar campos si no hay selección
+      $("#banco").val("");
+      $("#numeroCuenta").val("");
+      $("#nombreTitular").val("");
+      return;
+    }
+    const contactos = JSON.parse(localStorage.getItem("contactos")) || [];
+    const contacto = contactos.find(c => c.cuenta === cuentaSeleccionada);
+    if (contacto) {
+      $("#banco").val(contacto.banco);
+      $("#numeroCuenta").val(contacto.cuenta);
+      $("#nombreTitular").val(contacto.nombre);
+      $("#tipoCuenta").val(contacto.tipoCuenta);
+      $("#rutTitular").val(contacto.rut);
+    }
+
+  }
+
+  // Evento para cargar datos del contacto seleccionado
+  $("#selectContacto").on("change", function() {
+    const cuentaSeleccionada = $(this).val();
+    cargarCuentaSeleccionada(cuentaSeleccionada);
   });
 });
 
@@ -22,9 +53,19 @@ $("#montoTransferencia").on("input", function() {
   calcularResumen();
 });
 
+function cargarContactosSelect() {
+  const select = $("#selectContacto");
+  select.empty();
+  select.append('<option value="">Selecciona un contacto</option>');
+
+  const contactos = JSON.parse(localStorage.getItem("contactos")) || [];
+  contactos.forEach(contacto => {
+    select.append(`<option value="${contacto.cuenta}" data-nombre="${contacto.nombre}" data-banco="${contacto.banco}">${contacto.nombre} - ${contacto.cuenta}</option>`);
+  });
+}
 // Función para calcular el resumen
 function calcularResumen() {
-  const monto = parseFloat($("#montoRetiro").val()) || 0;
+  const monto = parseFloat($("#montoTransferencia").val()) || 0;
   const comision = monto * COMISION_PORCENTAJE;
   const total = monto + comision;
 
@@ -134,7 +175,9 @@ function guardarNuevoContacto() {
   const nombre = $("#contactoNombre").val();
   const email = $("#contactoEmail").val();
   const banco = $("#contactoBanco").val();
+  const tipoCuenta = $("#contactoTipoCuenta").val();
   const cuenta = $("#contactoCuenta").val();
+  const rut = $("#contactoRutTitular").val();
 
   // Validaciones
   if (!nombre || !email || !banco || !cuenta) {
@@ -152,7 +195,9 @@ function guardarNuevoContacto() {
     nombre: nombre,
     email: email,
     banco: banco,
-    cuenta: cuenta
+    cuenta: cuenta,
+    rut: rut,
+    tipoCuenta: tipoCuenta
   };
 
   // Obtener contactos del localStorage
@@ -179,4 +224,5 @@ function guardarNuevoContacto() {
   bootstrap.Modal.getInstance(document.getElementById("modalNuevoContacto")).hide();
 
   console.log("Contactos guardados:", contactos);
+  return nuevoContacto
 }

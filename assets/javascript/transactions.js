@@ -1,83 +1,5 @@
 // Transacciones de ejemplo (en una aplicación real vendrían de una base de datos)
-const transaccionesEjemplo = [
-  {
-    id: "TRX001",
-    tipo: "deposito",
-    monto: 500.00,
-    persona: "Carolina Flores",
-    fecha: "2026-01-12",
-    hora: "14:30",
-    estado: "Completado",
-    icono: "fa-plus-circle",
-    color: "#ffd93d"
-  },
-  {
-    id: "TRX002",
-    tipo: "transferencia",
-    monto: 250.50,
-    persona: "Juan García",
-    fecha: "2026-01-11",
-    hora: "10:15",
-    estado: "Completado",
-    icono: "fa-paper-plane",
-    color: "#4ecdc4"
-  },
-  {
-    id: "TRX003",
-    tipo: "retiro",
-    monto: 100.00,
-    persona: "Banco BBVA",
-    fecha: "2026-01-10",
-    hora: "09:45",
-    estado: "Completado",
-    icono: "fa-money-bill-wave",
-    color: "#ff6b6b"
-  },
-  {
-    id: "TRX004",
-    tipo: "transferencia",
-    monto: 150.00,
-    persona: "María López",
-    fecha: "2026-01-09",
-    hora: "16:20",
-    estado: "Completado",
-    icono: "fa-paper-plane",
-    color: "#4ecdc4"
-  },
-  {
-    id: "TRX005",
-    tipo: "deposito",
-    monto: 1000.00,
-    persona: "Salario",
-    fecha: "2026-01-08",
-    hora: "11:00",
-    estado: "Completado",
-    icono: "fa-plus-circle",
-    color: "#ffd93d"
-  },
-  {
-    id: "TRX006",
-    tipo: "retiro",
-    monto: 300.00,
-    persona: "Banco Santander",
-    fecha: "2026-01-07",
-    hora: "13:30",
-    estado: "Completado",
-    icono: "fa-money-bill-wave",
-    color: "#ff6b6b"
-  },
-  {
-    id: "TRX007",
-    tipo: "transferencia",
-    monto: 75.25,
-    persona: "Pedro Sánchez",
-    fecha: "2026-01-06",
-    hora: "15:45",
-    estado: "Completado",
-    icono: "fa-paper-plane",
-    color: "#4ecdc4"
-  }
-];
+const transaccionesEjemplo = [];
 
 // Cargar transacciones al abrir la página
 $(document).ready(function() {
@@ -159,8 +81,7 @@ function cargarTransacciones(transacciones) {
 function obtenerTextoTipo(tipo) {
   const tipos = {
     "deposito": "Depósito",
-    "transferencia": "Transferencia",
-    "retiro": "Retiro"
+    "transferencia": "Transferencia"
   };
   return tipos[tipo] || tipo;
 }
@@ -193,7 +114,6 @@ function agregarTransaccion(tipo, monto, persona, estado = "Completado") {
   const tiposIconos = {
     "deposito": { icono: "fa-plus-circle", color: "#ffd93d" },
     "transferencia": { icono: "fa-paper-plane", color: "#4ecdc4" },
-    "retiro": { icono: "fa-money-bill-wave", color: "#ff6b6b" }
   };
   
   const config = tiposIconos[tipo] || { icono: "fa-circle", color: "#ccc" };

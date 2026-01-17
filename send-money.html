@@ -27,11 +27,19 @@
 
       <!-- Contenido principal -->
       <main class="main-content p-4">
-        <!-- Botón para agregar nuevo contacto -->
+        <!-- Campo Contacto -->
         <div class="mb-3">
-          <button type="button" class="btn btn-outline-primary w-100" id="btnAgregarContacto" style="border-color: #7b2ff7; color: #7b2ff7;">
-            <i class="fas fa-user-plus"></i> Agregar nuevo contacto
-          </button>
+          <label for="tipoCuenta" class="form-label">
+            <i class="fas fa-user"></i> Seleccionar Contacto
+          </label>
+          <div class="row">
+            <div class="col-sm-10"><select class="form-control" id="selectContacto" required>
+            <option value="">Selecciona un Contacto</option>
+          </select></div>
+            <div class="col-sm-2"><button type="button" class="btn btn-outline-primary w-100" id="btnAgregarContacto" style="border-color: #7b2ff7; color: #7b2ff7;">
+            <i class="fas fa-user-plus"></i>
+          </button></div>
+         </div>        
         </div>
 
         <!-- Formulario de transferencia -->
@@ -51,7 +59,7 @@
                 step="0.01"
                 required
               >
-              <small class="text-muted">Monto máximo: $11,547</small>
+              <small id="maxMonto" class="text-muted">Monto máximo: $11,547</small>
             </div>
 
             <!-- Seleccionar banco -->
@@ -169,15 +177,29 @@
               <div class="modal-body">
                 <form id="idFormNuevoContacto">
                   <div class="mb-3">
-                    <label for="contactoNombre" class="form-label">Nombre</label>
+                    <label for="contactoNombre" class="form-label"><i class="fas fa-user"></i> Nombre</label>
                     <input type="text" class="form-control" id="contactoNombre" placeholder="Nombre del contacto" required>
                   </div>
+                  <!-- Campo de RUT -->
                   <div class="mb-3">
-                    <label for="contactoEmail" class="form-label">Correo electrónico</label>
+                    <label for="rutTitular" class="form-label">
+                      <i class="fas fa-id-card"></i> RUT del titular
+                    </label>
+                    <input 
+                      type="text" 
+                      class="form-control" 
+                      id="contactoRutTitular" 
+                      placeholder="Ej: 12345678-9"
+                      required
+                    >
+                  </div>
+                  <div class="mb-3">
+                    <label for="contactoEmail" class="form-label">
+                      <i class="fas fa-envelope"></i> Correo electrónico</label>
                     <input type="email" class="form-control" id="contactoEmail" placeholder="correo@ejemplo.com" required>
                   </div>
                   <div class="mb-3">
-                    <label for="contactoBanco" class="form-label">Banco</label>
+                    <label for="contactoBanco" class="form-label"><i class="fas fa-bank"></i> Banco</label>
                     <select class="form-control" id="contactoBanco" required>
                       <option value="">Selecciona un banco</option>
                       <option value="bbva">BBVA</option>
@@ -189,8 +211,20 @@
                       <option value="scotiabank">Scotiabank</option>
                     </select>
                   </div>
+                  <!-- Campo de tipo de cuenta -->
                   <div class="mb-3">
-                    <label for="contactoCuenta" class="form-label">Número de cuenta</label>
+                    <label for="tipoCuenta" class="form-label">
+                      <i class="fas fa-credit-card"></i> Tipo de cuenta
+                    </label>
+                    <select class="form-control" id="contactoTipoCuenta" required>
+                      <option value="">Selecciona tipo de cuenta</option>
+                      <option value="corriente">Cuenta Corriente</option>
+                      <option value="ahorro">Cuenta de Ahorro</option>
+                      <option value="vista">Cuenta Vista</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label for="contactoCuenta" class="form-label"><i class="fas fa-hashtag"></i> Número de cuenta</label>
                     <input type="text" class="form-control" id="contactoCuenta" placeholder="Ej: 12345678901234" required>
                   </div>
                 </form>
