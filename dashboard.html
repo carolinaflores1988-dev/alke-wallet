@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Alke Wallet - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="assets/css/dashboard.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="phone-frame">
+      <!-- Header con saldo -->
+      <header class="header-balance">
+        <div class="header-top d-flex justify-content-between align-items-center">
+          <div style="width: 30px;"></div>
+          <h1 id="nombreUsuario" class="mb-0">Hola, Carolina</h1>
+          <div style="width: 30px;"></div>
+        </div>
+        <div class="balance-section text-center mt-3">
+          <p class="balance-label">Saldo disponible</p>
+          <h2 id="saldoDisponible" class="balance-amount">$11,547</h2>
+        </div>
+      </header>
+
+      <!-- Acciones rápidas -->
+      <div class="quick-actions">
+        <button id="btnDeposito" class="action-item">
+          <div class="action-icon deposit">
+            <i class="fas fa-plus-circle"></i>
+          </div>
+          <p>Depósito</p>
+        </button>
+        <button id="btnTransferir" class="action-item">
+          <div class="action-icon transfer">
+            <i class="fas fa-paper-plane"></i>
+          </div>
+          <p>Transferir</p>
+        </button>
+        <button id="btnHistorial" class="action-item">
+          <div class="action-icon history">
+            <i class="fas fa-clock"></i>
+          </div>
+          <p>Historial</p>
+        </button>
+        <button id="btnCerrarSesion" class="action-item">
+          <div class="action-icon" style="background-color: #ff6b6b;">
+            <i class="fas fa-sign-out-alt"></i>
+          </div>
+          <p>Salir</p>
+        </button>
+      </div>
+
+      <!-- Contenido principal -->
+      <main class="main-content">
+        
+       
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+          <a href="#" class="nav-item active">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+          </a>     
+        </nav>
+      </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/javascript/jquery-3.7.1.min.js"></script>
+    <script src="assets/javascript/dashboard.js"></script>
+  </body>
+</html>

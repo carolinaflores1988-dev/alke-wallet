@@ -1,0 +1,93 @@
+:root {
+  --purple: #7b2ff7;
+}
+
+body {
+  background: #f5f5f5;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.phone-frame {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background: var(--purple);
+}
+
+.app-header {
+  padding: 20px;
+  color: white;
+  text-align: center;
+}
+
+.app-header .title {
+  font-weight: bold;
+  font-size: 1.25rem;
+}
+
+.app-body {
+  background: white;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  padding: 30px 20px;
+}
+
+.card-login {
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.brand-circle {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: #e8e0f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+}
+
+.brand-circle svg {
+  fill: var(--purple);
+  width: 35px;
+  height: 35px;
+}
+
+.login-btn {
+  background-color: var(--purple);
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  color: white;
+  font-weight: bold;
+  width: 100%;
+}
+
+.login-btn:hover {
+  background-color: #6a1fee;
+}
+
+.form-control:focus {
+  box-shadow: none;
+  border-color: var(--purple);
+}
+
+.small-muted {
+  color: #999999;
+  font-size: 0.9rem;
+}
+
+h5 {
+  color: #333333;
+  font-weight: bold;
+}
+
