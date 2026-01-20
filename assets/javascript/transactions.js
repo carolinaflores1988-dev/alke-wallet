@@ -1,22 +1,15 @@
-// Transacciones de ejemplo (en una aplicación real vendrían de una base de datos)
 const transaccionesEjemplo = [];
 
-// Cargar transacciones al abrir la página
 $(document).ready(function() {
-  console.log("Pantalla de historial cargada");
   
-  // Obtener transacciones (en una aplicación real, vendrían del servidor)
   let transacciones = JSON.parse(localStorage.getItem("transacciones")) || transaccionesEjemplo;
   
-  // Guardar transacciones en localStorage si no existen
   if (!localStorage.getItem("transacciones")) {
     localStorage.setItem("transacciones", JSON.stringify(transaccionesEjemplo));
   }
   
-  // Cargar y mostrar transacciones
   cargarTransacciones(transacciones);
   
-  // Evento para filtrar por tipo
   $("#filtroTipo").on("change", function() {
     const filtro = $(this).val();
     const transaccionesFiltradas = filtro ? transacciones.filter(t => t.tipo === filtro) : transacciones;
@@ -24,60 +17,55 @@ $(document).ready(function() {
   });
 });
 
-// Función para cargar y mostrar transacciones
 function cargarTransacciones(transacciones) {
+  let loggedUser = JSON.parse(sessionStorage.getItem("loggedUser"));
   const contenedor = $("#listaTransacciones");
   const sinTransacciones = $("#sinTransacciones");
   
-  // Limpiar contenedor
   contenedor.empty();
   
-  // Verificar si hay transacciones
   if (transacciones.length === 0) {
     sinTransacciones.show();
     return;
   }
-  
   sinTransacciones.hide();
   
-  // Crear HTML para cada transacción
-  transacciones.forEach(function(transaccion) {
-    const tipoTexto = obtenerTextoTipo(transaccion.tipo);
-    const signo = transaccion.tipo === "deposito" ? "+" : "-";
-    const colorTexto = transaccion.tipo === "deposito" ? "#4ecdc4" : "#ff6b6b";
-    
-    const html = `
-      <div class="transaccion-item mb-3 p-3" style="border: 1px solid #e0e0e0; border-radius: 10px; cursor: pointer;" data-transaccion='${JSON.stringify(transaccion)}'>
-        <div class="d-flex justify-content-between align-items-center">
-          <div class="d-flex align-items-center">
-            <div style="width: 45px; height: 45px; border-radius: 50%; background-color: ${transaccion.color}; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
-              <i class="fas ${transaccion.icono}" style="color: white; font-size: 1.2rem;"></i>
+  transacciones.filter(tx => tx.user === loggedUser.email)
+    .forEach(function(transaccion) {
+      const tipoTexto = obtenerTextoTipo(transaccion.tipo);
+      const signo = transaccion.tipo === "deposito" ? "+" : "-";
+      const colorTexto = transaccion.tipo === "deposito" ? "#4ecdc4" : "#ff6b6b";
+      
+      const html = `
+        <div class="transaccion-item mb-3 p-3" style="border: 1px solid #e0e0e0; border-radius: 10px; cursor: pointer;" data-transaccion='${JSON.stringify(transaccion)}'>
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+              <div style="width: 45px; height: 45px; border-radius: 50%; background-color: ${transaccion.color}; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                <i class="fas ${transaccion.icono}" style="color: white; font-size: 1.2rem;"></i>
+              </div>
+              <div>
+                <p class="mb-0" style="font-weight: 600; color: #333;">${tipoTexto}</p>
+                <p class="mb-0" style="font-size: 0.85rem; color: #999;">${transaccion.persona}</p>
+                <p class="mb-0" style="font-size: 0.75rem; color: #bbb;">${transaccion.fecha} ${transaccion.hora}</p>
+              </div>
             </div>
-            <div>
-              <p class="mb-0" style="font-weight: 600; color: #333;">${tipoTexto}</p>
-              <p class="mb-0" style="font-size: 0.85rem; color: #999;">${transaccion.persona}</p>
-              <p class="mb-0" style="font-size: 0.75rem; color: #bbb;">${transaccion.fecha} ${transaccion.hora}</p>
+            <div style="text-align: right;">
+              <p class="mb-0" style="font-weight: 700; color: ${colorTexto}; font-size: 1.1rem;">${signo}$${transaccion.monto.toFixed(2)}</p>
+              <p class="mb-0" style="font-size: 0.75rem; color: #4caf50;">${transaccion.estado}</p>
             </div>
-          </div>
-          <div style="text-align: right;">
-            <p class="mb-0" style="font-weight: 700; color: ${colorTexto}; font-size: 1.1rem;">${signo}$${transaccion.monto.toFixed(2)}</p>
-            <p class="mb-0" style="font-size: 0.75rem; color: #4caf50;">${transaccion.estado}</p>
           </div>
         </div>
-      </div>
-    `;
-    
-    contenedor.append(html);
+      `;
+      
+      contenedor.append(html);
   });
   
-  // Evento para abrir detalles
   $(".transaccion-item").on("click", function() {
     const transaccion = JSON.parse($(this).attr("data-transaccion"));
     mostrarDetalles(transaccion);
   });
 }
 
-// Función para obtener texto del tipo de transacción
 function obtenerTextoTipo(tipo) {
   const tipos = {
     "deposito": "Depósito",
@@ -86,12 +74,10 @@ function obtenerTextoTipo(tipo) {
   return tipos[tipo] || tipo;
 }
 
-// Función para mostrar detalles de la transacción
 function mostrarDetalles(transaccion) {
   const tipoTexto = obtenerTextoTipo(transaccion.tipo);
   const signo = transaccion.tipo === "deposito" ? "+" : "-";
   
-  // Llenar modal con datos
   $("#detallesTipo").text(tipoTexto);
   $("#detallesMonto").text(`${signo}$${transaccion.monto.toFixed(2)}`);
   $("#detallesPersona").text(transaccion.persona);
@@ -100,12 +86,10 @@ function mostrarDetalles(transaccion) {
   $("#detallesEstado").html(`<span style="background-color: #4caf50; color: white; padding: 3px 8px; border-radius: 5px;">${transaccion.estado}</span>`);
   $("#detallesReferencia").text(transaccion.id);
   
-  // Mostrar modal
   const modal = new bootstrap.Modal(document.getElementById("modalDetalles"));
   modal.show();
 }
 
-// Función para agregar una nueva transacción (para usar desde otras pantallas)
 function agregarTransaccion(tipo, monto, persona, estado = "Completado") {
   const ahora = new Date();
   const fecha = ahora.toISOString().split("T")[0];
@@ -130,14 +114,7 @@ function agregarTransaccion(tipo, monto, persona, estado = "Completado") {
     color: config.color
   };
   
-  // Obtener transacciones existentes
   let transacciones = JSON.parse(localStorage.getItem("transacciones")) || [];
-  
-  // Agregar nueva transacción al inicio
   transacciones.unshift(nuevaTransaccion);
-  
-  // Guardar en localStorage
   localStorage.setItem("transacciones", JSON.stringify(transacciones));
-  
-  console.log("Nueva transacción agregada:", nuevaTransaccion);
 }

@@ -137,40 +137,31 @@ $("#btnConfirmarTransfer").click(function() {
     hora: new Date().toTimeString().split(" ")[0].substring(0, 5),
     estado: "Completado",
     icono: "fa-paper-plane",
-    color: "#4ecdc4"
+    color: "#4ecdc4",
+    user: JSON.parse(sessionStorage.getItem("loggedUser")).email
   };
 
-  // Guardar transacción en localStorage
   let transacciones = JSON.parse(localStorage.getItem("transacciones")) || [];
   transacciones.unshift(transaccion);
   localStorage.setItem("transacciones", JSON.stringify(transacciones));
-
-  // Actualizar saldo en sessionStorage
   let usuario = JSON.parse(sessionStorage.getItem("loggedUser"));
+  
   if (usuario) {
     usuario.saldo = (parseFloat(usuario.saldo) - monto).toFixed(2);
     sessionStorage.setItem("loggedUser", JSON.stringify(usuario));
   }
-
-  console.log("Transferencia confirmada:", transaccion);
-
-  // Mostrar mensaje de éxito
   alert("¡Transferencia realizada exitosamente! Se ha transferido $" + monto.toFixed(2) + " a " + nombreTitular);
 
-  // Limpiar formulario y redirigir
   $("#idFormTransfer")[0].reset();
   calcularResumen();
 
-  // Cerrar modal
   bootstrap.Modal.getInstance(document.getElementById("modalConfirmacion")).hide();
 
-  // Redirigir al dashboard después de 1.5 segundos
   setTimeout(function() {
     window.location.href = "dashboard.html";
   }, 1500);
 });
 
-// Función para guardar nuevo contacto
 function guardarNuevoContacto() {
   const nombre = $("#contactoNombre").val();
   const email = $("#contactoEmail").val();
@@ -179,18 +170,15 @@ function guardarNuevoContacto() {
   const cuenta = $("#contactoCuenta").val();
   const rut = $("#contactoRutTitular").val();
 
-  // Validaciones
   if (!nombre || !email || !banco || !cuenta) {
     alert("Por favor completa todos los campos");
     return;
   }
-
   if (cuenta.length < 10) {
     alert("Por favor ingresa un número de cuenta válido");
     return;
   }
 
-  // Crear objeto contacto
   const nuevoContacto = {
     nombre: nombre,
     email: email,
@@ -200,29 +188,19 @@ function guardarNuevoContacto() {
     tipoCuenta: tipoCuenta
   };
 
-  // Obtener contactos del localStorage
   let contactos = JSON.parse(localStorage.getItem("contactos")) || [];
   
-  // Verificar que no exista un contacto con la misma cuenta
   const contactoExistente = contactos.find(c => c.cuenta === cuenta);
   if (contactoExistente) {
     alert("Este contacto ya existe");
     return;
   }
 
-  // Agregar nuevo contacto
   contactos.push(nuevoContacto);
   localStorage.setItem("contactos", JSON.stringify(contactos));
-
-  // Mostrar mensaje de éxito
   alert("¡Contacto agregado exitosamente!");
-
-  // Limpiar formulario
   $("#idFormNuevoContacto")[0].reset();
 
-  // Cerrar modal
   bootstrap.Modal.getInstance(document.getElementById("modalNuevoContacto")).hide();
-
-  console.log("Contactos guardados:", contactos);
   return nuevoContacto
 }

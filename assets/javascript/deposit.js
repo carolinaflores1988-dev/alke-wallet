@@ -1,7 +1,5 @@
-// Configuración de depósitos
 const MONTO_MINIMO = 10;
 
-// Cargar saldo desde localStorage o sessionStorage
 $(document).ready(function() {
   let loggedUser = JSON.parse(sessionStorage.getItem("loggedUser"));
 
@@ -11,28 +9,23 @@ $(document).ready(function() {
 
   console.log("Pantalla de depósito cargada");
 
-  // Actualizar resumen cuando cambia el monto
   $("#montoDeposito").on("input", function() {
     calcularResumen();
   });
 
-  // Actualizar banco en el resumen cuando cambia
   $("#bancoOrigen").on("change", function() {
     const bancoSeleccionado = $(this).find("option:selected").text();
     $("#resumenBanco").text(bancoSeleccionado);
   });
 });
 
-// Función para calcular el resumen
 function calcularResumen() {
   const monto = parseFloat($("#montoDeposito").val()) || 0;
 
-  // Actualizar valores en el resumen
   $("#montoResumen").text("$" + monto.toFixed(2));
   $("#totalResumen").text("$" + monto.toFixed(2));
 }
 
-// Envío del formulario
 $("#idFormDeposit").submit(function(e) {
   e.preventDefault();
 
@@ -42,7 +35,6 @@ $("#idFormDeposit").submit(function(e) {
   const monto = parseFloat($("#montoDeposito").val());
   const descripcion = $("#descripcion").val();
 
-  // Validaciones
   if (!bancoOrigen) {
     alert("Por favor selecciona un banco de origen");
     return;
@@ -68,11 +60,9 @@ $("#idFormDeposit").submit(function(e) {
     return;
   }
 
-  // Obtener nombre del banco
   const bancoSeleccionado = $("#bancoOrigen").find("option:selected").text();
   const tipoCuentaTexto = $("#tipoCuentaOrigen").find("option:selected").text();
 
-  // Mostrar modal de confirmación
   $("#modalBancoOrigen").text(bancoSeleccionado);
   $("#modalTipoCuenta").text(tipoCuentaTexto);
   $("#modalNumeroCuenta").text("****" + numeroCuentaOrigen.slice(-4));
@@ -82,7 +72,6 @@ $("#idFormDeposit").submit(function(e) {
   modal.show();
 });
 
-// Confirmación final del depósito
 $("#btnConfirmarDeposito").click(function() {
   const bancoOrigen = $("#bancoOrigen").val();
   const tipoCuentaOrigen = $("#tipoCuentaOrigen").val();
@@ -90,7 +79,6 @@ $("#btnConfirmarDeposito").click(function() {
   const monto = parseFloat($("#montoDeposito").val());
   const descripcion = $("#descripcion").val();
   
-  // Crear objeto de transacción
   const transaccion = {
     id: "DEP" + Date.now(),
     tipo: "deposito",
@@ -104,35 +92,36 @@ $("#btnConfirmarDeposito").click(function() {
     hora: new Date().toTimeString().split(" ")[0].substring(0, 5),
     estado: "Completado",
     icono: "fa-plus-circle",
-    color: "#ffd93d"
+    color: "#ffd93d",
+    user: JSON.parse(sessionStorage.getItem("loggedUser")).email
   };
 
-  // Guardar transacción en localStorage
   let transacciones = JSON.parse(localStorage.getItem("transacciones")) || [];
   transacciones.unshift(transaccion);
   localStorage.setItem("transacciones", JSON.stringify(transacciones));
 
-  // Actualizar saldo en sessionStorage
   let usuario = JSON.parse(sessionStorage.getItem("loggedUser"));
   if (usuario) {
     usuario.saldo = (parseFloat(usuario.saldo) + monto).toFixed(2);
     sessionStorage.setItem("loggedUser", JSON.stringify(usuario));
+    let usuarios = JSON.parse(localStorage.getItem("usuarios"));
+    usuarios = usuarios.map(u => {
+      if (u.email === usuario.email) {
+        u.saldo = usuario.saldo;
+      }
+      return u;
+    });
+    localStorage.setItem("usuarios", JSON.stringify(usuarios));
   }
 
-  console.log("Depósito confirmado:", transaccion);
-
-  // Mostrar mensaje de éxito
   alert("¡Depósito realizado exitosamente! Se han depositado $" + monto.toFixed(2) + " a tu cuenta Alke Wallet.");
 
-  // Limpiar formulario
   $("#idFormDeposit")[0].reset();
   calcularResumen();
   $("#resumenBanco").text("");
 
-  // Cerrar modal
   bootstrap.Modal.getInstance(document.getElementById("modalConfirmacion")).hide();
 
-  // Redirigir al dashboard después de 1.5 segundos
   setTimeout(function() {
     window.location.href = "dashboard.html";
   }, 1500);
