@@ -1,13 +1,18 @@
 $(document).ready(function () {
     let loggedUser = JSON.parse(sessionStorage.getItem("loggedUser"));
-    console.log(loggedUser);
+
+    if (!loggedUser) {
+        window.location.href = "login.html";
+        return;
+    }
+
     $("#nombreUsuario").text("Hola, " + loggedUser.nombre);
     $("#saldoDisponible").text("$" + loggedUser.saldo);
 
     $("#btnCerrarSesion").click(function() {
       if(confirm("¿Estás seguro de que deseas cerrar sesión?")) {
-        sessionStorage.clear();
-        window.location.href = "login.html";
+        sessionStorage.removeItem("loggedUser");
+        window.location.href = "index.html";
       }
     });
 

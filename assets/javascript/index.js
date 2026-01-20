@@ -1,20 +1,17 @@
-class usuario{
-    
-    constructor(nombre, apellido,email, password, saldo){
+class Usuario {
+    constructor(nombre, apellido, email, password, saldo) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.email = email;
         this.password = password;
         this.saldo = saldo;
     }
-    
-
 }
 
-
 $(document).ready(function() {
-    var usuarios = JSON.parse(localStorage.getItem("usuarios")) || InicializarUsuarios();
-    localStorage.setItem("usuarios", JSON.stringify(usuarios));
+    if (!localStorage.getItem("usuarios")) {
+        localStorage.setItem("usuarios", JSON.stringify(inicializarUsuarios()));
+    }
   
     $("#formRegistro").submit(function(e) {
         e.preventDefault();
@@ -29,18 +26,19 @@ $(document).ready(function() {
             return;
         }
 
-        const nuevoUsuario = new usuario(nombre, apellido, email, password, 0);
+        const usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
 
-        usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-
-        // Verificar si el usuario ya existe
         if (usuarios.some(u => u.email === email)) {
             alert("El correo electrónico ya está registrado");
             return;
         }
 
+        const nuevoUsuario = new Usuario(nombre, apellido, email, password, 0);
         usuarios.push(nuevoUsuario);
         localStorage.setItem("usuarios", JSON.stringify(usuarios));
+        
+        alert("¡Registro exitoso! Ahora puedes iniciar sesión.");
+        
         $("#formRegistro")[0].reset();
         
         const modal = bootstrap.Modal.getInstance(document.getElementById('modalRegistro'));
@@ -48,11 +46,11 @@ $(document).ready(function() {
     });
 });
 
-var InicializarUsuarios = function(){
-    var usuarios = [];
-    usuarios.push(new usuario("Carolina", "Flores", "carolina@gmail.com", "123456", 10000000));
-    usuarios.push(new usuario("Juan", "Perez", "juan@gmail.com", "123456", 2000));
-    usuarios.push(new usuario("Maria", "Gomez", "maria@gmail.com", "123456", 3000));
-    usuarios.push(new usuario("Admin", "Admin", "admin@gmail.com", "admin", 5000));
-    return usuarios;
+function inicializarUsuarios() {
+    return [
+        new Usuario("Carolina", "Flores", "carolina@gmail.com", "123456", 10000000),
+        new Usuario("Juan", "Perez", "juan@gmail.com", "123456", 2000),
+        new Usuario("Maria", "Gomez", "maria@gmail.com", "123456", 3000),
+        new Usuario("Admin", "Admin", "admin@gmail.com", "admin", 5000)
+    ];
 }

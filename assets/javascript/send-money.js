@@ -1,29 +1,33 @@
-// Configuración de comisión (1%)
 const COMISION_PORCENTAJE = 0.01;
 
-// Cargar saldo desde localStorage
 $(document).ready(function() {
   let loggedUser = JSON.parse(sessionStorage.getItem("loggedUser"));
+
+  if (!loggedUser) {
+    window.location.href = "login.html";
+    return;
+  }
+
   $("#saldoDisponible").text("$" + loggedUser.saldo);
   $("#maxMonto").text("Monto máximo a Transferir $" + loggedUser.saldo);
   cargarContactosSelect();
-  // Evento para abrir modal de agregar contacto
+  
   $("#btnAgregarContacto").click(function() {
     const modal = new bootstrap.Modal(document.getElementById("modalNuevoContacto"));
     modal.show();
   });
 
-  // Evento para guardar nuevo contacto
   $("#btnGuardarContacto").click(function() {
-    contacto =guardarNuevoContacto();
-    cargarContactosSelect();
-    $("#selectContacto").val(contacto.cuenta);
-    cargarCuentaSeleccionada(contacto.cuenta);
+    const contacto = guardarNuevoContacto();
+    if (contacto) {
+      cargarContactosSelect();
+      $("#selectContacto").val(contacto.cuenta);
+      cargarCuentaSeleccionada(contacto.cuenta);
+    }
   });
 
   function cargarCuentaSeleccionada(cuentaSeleccionada) {
     if (!cuentaSeleccionada) {
-      // Limpiar campos si no hay selección
       $("#banco").val("");
       $("#numeroCuenta").val("");
       $("#nombreTitular").val("");
@@ -41,14 +45,12 @@ $(document).ready(function() {
 
   }
 
-  // Evento para cargar datos del contacto seleccionado
   $("#selectContacto").on("change", function() {
     const cuentaSeleccionada = $(this).val();
     cargarCuentaSeleccionada(cuentaSeleccionada);
   });
 });
 
-// Actualizar resumen cuando cambia el monto
 $("#montoTransferencia").on("input", function() {
   calcularResumen();
 });
@@ -63,22 +65,20 @@ function cargarContactosSelect() {
     select.append(`<option value="${contacto.cuenta}" data-nombre="${contacto.nombre}" data-banco="${contacto.banco}">${contacto.nombre} - ${contacto.cuenta}</option>`);
   });
 }
-// Función para calcular el resumen
 function calcularResumen() {
   const monto = parseFloat($("#montoTransferencia").val()) || 0;
   const comision = monto * COMISION_PORCENTAJE;
   const total = monto + comision;
 
-  // Actualizar valores en el resumen
   $("#montoResumen").text("$" + monto.toFixed(2));
   $("#comisionResumen").text("$" + comision.toFixed(2));
   $("#totalResumen").text("$" + total.toFixed(2));
 }
 
-// Envío del formulario
 $("#idFormTransfer").submit(function(e) {
   e.preventDefault();
 
+  const loggedUser = JSON.parse(sessionStorage.getItem("loggedUser"));
   const monto = parseFloat($("#montoTransferencia").val());
   const banco = $("#banco").val();
   const tipoCuenta = $("#tipoCuenta").val();
@@ -88,7 +88,6 @@ $("#idFormTransfer").submit(function(e) {
   const comision = monto * COMISION_PORCENTAJE;
   const total = monto + comision;
 
-  // Validaciones
   if (monto <= 0) {
     alert("Por favor ingresa un monto válido");
     return;
@@ -99,10 +98,13 @@ $("#idFormTransfer").submit(function(e) {
     return;
   }
 
-  // Obtener nombre del banco
+  if (total > parseFloat(loggedUser.saldo)) {
+    alert("Saldo insuficiente para realizar esta transferencia (incluyendo comisión).");
+    return;
+  }
+
   const opcionBanco = $("#banco option:selected").text();
 
-  // Mostrar modal de confirmación
   $("#modalBanco").text(opcionBanco);
   $("#modalCuenta").text(tipoCuenta + " - " + numeroCuenta);
   $("#modalTitular").text(nombreTitular);
@@ -114,7 +116,6 @@ $("#idFormTransfer").submit(function(e) {
   modal.show();
 });
 
-// Confirmación final de la transferencia
 $("#btnConfirmarTransfer").click(function() {
   const banco = $("#banco").val();
   const tipoCuenta = $("#tipoCuenta").val();
@@ -122,8 +123,8 @@ $("#btnConfirmarTransfer").click(function() {
   const nombreTitular = $("#nombreTitular").val();
   const rutTitular = $("#rutTitular").val();
   const monto = parseFloat($("#montoTransferencia").val());
+  const total = monto * (1 + COMISION_PORCENTAJE);
   
-  // Crear objeto de transacción
   const transaccion = {
     id: "TRF" + Date.now(),
     tipo: "transferencia",
@@ -147,8 +148,17 @@ $("#btnConfirmarTransfer").click(function() {
   let usuario = JSON.parse(sessionStorage.getItem("loggedUser"));
   
   if (usuario) {
-    usuario.saldo = (parseFloat(usuario.saldo) - monto).toFixed(2);
+    usuario.saldo = (parseFloat(usuario.saldo) - total).toFixed(2);
     sessionStorage.setItem("loggedUser", JSON.stringify(usuario));
+    
+    let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+    usuarios = usuarios.map(u => {
+      if (u.email === usuario.email) {
+        u.saldo = usuario.saldo;
+      }
+      return u;
+    });
+    localStorage.setItem("usuarios", JSON.stringify(usuarios));
   }
   alert("¡Transferencia realizada exitosamente! Se ha transferido $" + monto.toFixed(2) + " a " + nombreTitular);
 
@@ -202,5 +212,5 @@ function guardarNuevoContacto() {
   $("#idFormNuevoContacto")[0].reset();
 
   bootstrap.Modal.getInstance(document.getElementById("modalNuevoContacto")).hide();
-  return nuevoContacto
+  return nuevoContacto;
 }
