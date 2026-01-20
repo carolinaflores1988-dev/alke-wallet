@@ -7,12 +7,6 @@
   --border: #dddddd;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
   background: var(--light-bg);
   font-family: Arial, sans-serif;
@@ -26,15 +20,97 @@ body {
 .phone-frame {
   width: 100%;
   max-width: 420px;
-  background: var(--white);
   border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
   overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Header */
+.app-header {
+  padding: 20px;
+  color: white;
+  text-align: center;
+}
+
+.app-header .title {
+  font-weight: bold;
+  font-size: 1.25rem;
+}
+
+.app-body {
+  background: white;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  padding: 30px 20px;
+}
+
+.card-login {
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.brand-circle {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: #e8e0f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+}
+
+.brand-circle svg {
+  fill: var(--purple);
+  width: 35px;
+  height: 35px;
+}
+
+.login-btn {
+  background-color: var(--purple);
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  color: white;
+  font-weight: bold;
+  width: 100%;
+}
+
+.login-btn:hover {
+  background-color: #6a1fee;
+}
+
+.form-control:focus {
+  box-shadow: none;
+  border-color: var(--purple);
+}
+
+.small-muted {
+  color: #999999;
+  font-size: 0.9rem;
+}
+
+h5 {
+  color: #333333;
+  font-weight: bold;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.phone-frame:has(.app-header) {
+  background: var(--purple);
+}
+
+.phone-frame:has(.header-balance) {
+  background: var(--white);
+  display: flex;
+  flex-direction: column;
+}
+
 .header-balance {
   background-color: var(--purple);
   color: var(--white);
@@ -80,7 +156,6 @@ body {
   margin-top: 15px;
 }
 
-/* Acciones rápidas */
 .quick-actions {
   display: flex;
   justify-content: center;
@@ -136,13 +211,16 @@ body {
   background-color: #6c5ce7;
 }
 
+.action-icon.logout {
+  background-color: #ff6b6b;
+}
+
 .action-item p {
   font-size: 0.75rem;
   color: var(--dark-text);
   margin: 0;
 }
 
-/* Contenido principal */
 .main-content {
   flex: 1;
   padding: 15px;
@@ -161,7 +239,6 @@ body {
   margin-bottom: 10px;
 }
 
-/* Payment Section */
 .payment-section {
   margin-bottom: 2rem;
 }
@@ -228,7 +305,6 @@ body {
   margin: 0;
 }
 
-/* Promo Section */
 .promo-section {
   margin-bottom: 20px;
 }
@@ -264,7 +340,6 @@ body {
   margin: 0;
 }
 
-/* Bottom Navigation */
 .bottom-nav {
   display: flex;
   justify-content: space-around;
@@ -299,7 +374,6 @@ body {
   margin-top: 2px;
 }
 
-/* Responsive */
 @media (max-width: 480px) {
   .phone-frame {
     border-radius: 15px;
@@ -324,3 +398,89 @@ body {
   }
 }
 
+
+.transaccion-item {
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.transaccion-icono {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+}
+
+.transaccion-icono i {
+  color: white;
+  font-size: 1.2rem;
+}
+
+.transaccion-texto-tipo {
+  font-weight: 600;
+  color: #333;
+}
+
+.transaccion-texto-persona {
+  font-size: 0.85rem;
+  color: #999;
+}
+
+.transaccion-texto-fecha {
+  font-size: 0.75rem;
+  color: #bbb;
+}
+
+.transaccion-monto {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.transaccion-estado, .badge-estado {
+  font-size: 0.75rem;
+  color: #4caf50;
+}
+
+.badge-estado {
+  background-color: #4caf50;
+  color: white;
+  padding: 3px 8px;
+  border-radius: 5px;
+}
+
+.bg-purple {
+  background-color: var(--purple);
+  color: var(--white);
+}
+
+.btn-outline-purple {
+  border-color: var(--purple);
+  color: var(--purple);
+}
+
+.btn-outline-purple:hover {
+  background-color: var(--purple);
+  color: var(--white);
+}
+
+.filter-icon {
+  background-color: var(--light-bg);
+  border: 1px solid var(--border);
+}
+
+.filter-select {
+  border: 1px solid var(--border);
+}
+
+.empty-state-icon {
+  font-size: 3rem;
+  color: #cccccc;
+}
+
+.text-purple {
+  color: var(--purple);
+}

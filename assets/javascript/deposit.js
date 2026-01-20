@@ -3,11 +3,12 @@ const MONTO_MINIMO = 10;
 $(document).ready(function() {
   let loggedUser = JSON.parse(sessionStorage.getItem("loggedUser"));
 
-  if (loggedUser) {
-    $("#saldoDisponible").text("$" + parseFloat(loggedUser.saldo).toFixed(2));
+  if (!loggedUser) {
+    window.location.href = "login.html";
+    return;
   }
-
-  console.log("Pantalla de depósito cargada");
+  
+  $("#saldoDisponible").text("$" + parseFloat(loggedUser.saldo).toFixed(2));
 
   $("#montoDeposito").on("input", function() {
     calcularResumen();
@@ -104,7 +105,7 @@ $("#btnConfirmarDeposito").click(function() {
   if (usuario) {
     usuario.saldo = (parseFloat(usuario.saldo) + monto).toFixed(2);
     sessionStorage.setItem("loggedUser", JSON.stringify(usuario));
-    let usuarios = JSON.parse(localStorage.getItem("usuarios"));
+    let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
     usuarios = usuarios.map(u => {
       if (u.email === usuario.email) {
         u.saldo = usuario.saldo;
